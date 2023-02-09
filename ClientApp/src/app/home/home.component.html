@@ -1,0 +1,20 @@
+<div class="messages">
+  <div class="jumbotron" *ngFor="let message of Messages">
+    <p>{{message.userName}}</p>
+    <p>{{message.message}}</p>
+  </div>
+</div>
+<div class="chat">
+  <form>
+    <div class="form-group, input-group mb-3 small-input" >
+      <input type="text" class="form-control" type="text" placeholder="user name" name="userName" [(ngModel)]=userName>
+    </div>
+    <div class="form-group , form-control-lg , input-group mb-3">
+      <input class="form-control form-control-lg big-input" type="text" placeholder="message" name="newMessage" [(ngModel)]=newMessage>
+      <div class="form-group-append">
+        <button class="btn btn-outline-secondary btn-lg" type="submit" (click) = "onSendMessage()">Button</button>
+      </div>
+    </div>
+  </form>
+
+</div>

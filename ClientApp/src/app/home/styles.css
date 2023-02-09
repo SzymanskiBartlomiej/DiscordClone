@@ -1,0 +1,18 @@
+.small-input{
+  width: 300px;
+}
+.big-input{
+  width: 1000px;
+}
+form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.form-group{
+  gap: 10px;
+}
+p{
+  color: white;
+}
