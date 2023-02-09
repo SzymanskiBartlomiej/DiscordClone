@@ -11,7 +11,7 @@ public partial class User
 
     public string? PasswordHash { get; set; }
 
-    public string? PasswordSalt { get; set; }
-
     public virtual ICollection<Message> Messages { get; } = new List<Message>();
+
+    public virtual ICollection<Server> Servers { get; } = new List<Server>();
 }
