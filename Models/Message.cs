@@ -11,7 +11,7 @@ public partial class Message
 
     public int ChatId { get; set; }
 
-    public string? Message1 { get; set; }
+    public string? Content { get; set; }
 
     public DateTime? Date { get; set; }
 

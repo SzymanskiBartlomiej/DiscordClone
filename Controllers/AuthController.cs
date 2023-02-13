@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace DiscordClone.Controllers
 {
@@ -20,10 +21,9 @@ namespace DiscordClone.Controllers
     {
         private readonly MyDbContext _context;
         private readonly IConfiguration _configuration;
-        public AuthController(MyDbContext context, IConfiguration configuration)
+        public AuthController(MyDbContext context)
         {
             this._context = context;
-            this._configuration = configuration;
         }
         
         [HttpPost("register")]
@@ -51,7 +51,12 @@ namespace DiscordClone.Controllers
             }
             if (BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
-                return Ok(CreateJwtToken(user));
+                IDictionary<string, string> token = new Dictionary<string, string>();
+                var exp = DateTime.Now.AddMinutes(15);
+                token.Add("token",CreateJwtToken(user));
+                token.Add("expiration", exp.ToString());
+                token.Add("userID",user.UserId.ToString());
+                return Ok(token);
             }
 
             return BadRequest("Wrong passowrd");
