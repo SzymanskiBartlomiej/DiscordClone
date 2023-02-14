@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json;
 using DiscordClone.Context;
 using DiscordClone.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -38,10 +39,14 @@ public class ChatHub : Hub
             Content = message,
             Date = DateTime.Now });
         await this._context.SaveChangesAsync();
-        await Clients.Group(chatid.ToString()).SendAsync("messageReceived", new {
-            userName = userName,
+        var json = JsonSerializer.Serialize(new
+        {
+            UserName = userName,
             ChatID = chatid,
             Content = message,
-            Date = DateTime.Now });
+            Date = DateTime.Now
+        });
+
+        await Clients.Group(chatid.ToString()).SendAsync("messageReceived", json);
     }
 }

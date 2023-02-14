@@ -88,7 +88,7 @@ namespace DiscordClone.Controllers
             var userId = User.FindFirstValue(ClaimTypes.SerialNumber);
             return Ok(new {userName, userId});
         }
-
+        [NonAction]
         public Boolean CheckIfUserExists(string userName)
         {
             if (_context.Users.FirstOrDefault(user => user.UserName == userName) == null)

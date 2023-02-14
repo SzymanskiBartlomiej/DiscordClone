@@ -27,23 +27,23 @@ export class ChatComponent implements OnInit {
       this.router.navigate(['/login']);
     }
     let url = "https://localhost:7034/api/Chat/" + this.chatID.toString()
-    this.http.get(url).subscribe(messages => this.messages = messages as Message[]);
+    this.http.get<Message[]>(url).subscribe(messages => {this.messages = messages});
     this.connection.start().then(() => { console.log("connected") }).catch(err => console.log(err));
-    this.connection.on("messageReceived", (message : Message) => this.OnMessageReceived(message));
+    this.connection.on("messageReceived", (message : string) => this.OnMessageReceived(message));
   }
 
   onSend(){
     let message : Message = {
-      chatID : this.chatID,
-      userName : localStorage.getItem('userName') || "",
-      content : this.newMessage,
-      date : new Date()
+      ChatID : this.chatID,
+      UserName : localStorage.getItem('userName') || "",
+      Content : this.newMessage,
+      Date : new Date()
     }
     this.connection.invoke("NewMessage",this.chatID,Number(localStorage.getItem('userID')),this.newMessage)
   }
-  OnMessageReceived(message : Message){
-    console.log(message);
-    if (message.chatID == this.chatID)
+  OnMessageReceived(json : string){
+    let message : Message = JSON.parse(json);
+    if (message.ChatID == this.chatID)
     {
       this.messages.push(message);
     }

@@ -19,6 +19,7 @@ namespace DiscordClone.Controllers
             this._context = context;
         }
         
+        [NonAction]
         public List<int> GetUserServers(int userId)
         {
             var userServers = _context.Servers
@@ -48,6 +49,7 @@ namespace DiscordClone.Controllers
                 from messages in _context.Messages
                 join users in _context.Users
                 on messages.UserId equals users.UserId
+                orderby messages.Date
                 select new { messages.Content, messages.Date, users.UserName, messages.ChatId };
             return Ok(JsonSerializer.Serialize(result.ToList()));
         }

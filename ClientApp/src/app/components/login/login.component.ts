@@ -15,9 +15,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  onSubmit() {
-    // TODO Make this function async
-    this.auth.login(this.login, this.password).subscribe(token => {
+  async onSubmit() {
+    await this.auth.login(this.login, this.password).subscribe(token => {
       localStorage.setItem('token', token.token)
       localStorage.setItem('expiration', token.expiration)
       localStorage.setItem('userID', token.userID)
