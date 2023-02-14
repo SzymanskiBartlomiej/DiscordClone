@@ -29,9 +29,11 @@ namespace DiscordClone.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(string userName , string password)
         {
-            //TODO Check if user already exists
+            if (CheckIfUserExists(userName))
+            {
+                return BadRequest("User is already registered") ;
+            }
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
-            Console.WriteLine(passwordHash);
             _context.Users.Add(new User
             {
                 PasswordHash = passwordHash,
@@ -44,11 +46,11 @@ namespace DiscordClone.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(string userName, string password)
         {
-            User user = _context.Users.FirstOrDefault(user => user.UserName == userName);
-            if (user == null)
+            if (!CheckIfUserExists(userName))
             {
-                return BadRequest("User not found");
+                return BadRequest("User not found") ;
             }
+            User user = _context.Users.FirstOrDefault(user => user.UserName == userName);
             if (BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
                 IDictionary<string, string> token = new Dictionary<string, string>();
@@ -85,6 +87,16 @@ namespace DiscordClone.Controllers
             var userName = User.Identity.Name;
             var userId = User.FindFirstValue(ClaimTypes.SerialNumber);
             return Ok(new {userName, userId});
+        }
+
+        public Boolean CheckIfUserExists(string userName)
+        {
+            if (_context.Users.FirstOrDefault(user => user.UserName == userName) == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }   
 }

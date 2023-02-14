@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordClone", "DiscordClone.csproj", "{B92DFFF0-18B7-432F-AC70-02584AE34540}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordClone.Tests", "DiscordClone.Tests\DiscordClone.Tests.csproj", "{A6D5C8B8-7EA3-4F91-B1E0-60B59AEC9D14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{B92DFFF0-18B7-432F-AC70-02584AE34540}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B92DFFF0-18B7-432F-AC70-02584AE34540}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B92DFFF0-18B7-432F-AC70-02584AE34540}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6D5C8B8-7EA3-4F91-B1E0-60B59AEC9D14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6D5C8B8-7EA3-4F91-B1E0-60B59AEC9D14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6D5C8B8-7EA3-4F91-B1E0-60B59AEC9D14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6D5C8B8-7EA3-4F91-B1E0-60B59AEC9D14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

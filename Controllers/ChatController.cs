@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json;
 using DiscordClone.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,16 +18,22 @@ namespace DiscordClone.Controllers
         {
             this._context = context;
         }
+        
+        public List<int> GetUserServers(int userId)
+        {
+            var userServers = _context.Servers
+                .Where(server => server.UserId == userId)
+                .Select(server => server.ChatId)
+                .ToList();
+            return userServers;
+        }
 
         [HttpGet("{chatid}")] 
         [Authorize]
-        public async Task<IActionResult> getChat(int chatid, int skip)
+        public async Task<IActionResult> GetChat(int chatid)
         {
-            var userId = User.FindFirstValue(ClaimTypes.SerialNumber);
-            var userServers = _context.Servers
-                .Where(server => server.UserId.ToString() == userId)
-                .Select(server => server.ChatId)
-                .ToList();
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.SerialNumber));
+            var userServers = GetUserServers(userId);
             if (!userServers.Contains(chatid))
             {
                 return Unauthorized("You're not part of this chat ;c");
@@ -42,12 +49,12 @@ namespace DiscordClone.Controllers
                 join users in _context.Users
                 on messages.UserId equals users.UserId
                 select new { messages.Content, messages.Date, users.UserName, messages.ChatId };
-            return Ok(result);
+            return Ok(JsonSerializer.Serialize(result.ToList()));
         }
 
         [HttpGet("user/{userid}")]
         [Authorize]
-        public async Task<IActionResult> getUserHistory(int userid, int skip)
+        public async Task<IActionResult> GetUserHistory(int userid, int skip)
         {
             var result = await _context.Messages
                 .Where(chat => chat.UserId == userid)
