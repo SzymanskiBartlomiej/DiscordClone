@@ -20,7 +20,6 @@ namespace DiscordClone.Controllers
     public class AuthController : ControllerBase
     {
         private readonly MyDbContext _context;
-        private readonly IConfiguration _configuration;
         public AuthController(MyDbContext context)
         {
             this._context = context;
@@ -39,7 +38,7 @@ namespace DiscordClone.Controllers
                 PasswordHash = passwordHash,
                 UserName = userName
             });
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -66,7 +65,7 @@ namespace DiscordClone.Controllers
 
         private string CreateJwtToken(User user)
         {
-            List<Claim> claims = new List<Claim>
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.SerialNumber,user.UserId.ToString())
@@ -91,12 +90,7 @@ namespace DiscordClone.Controllers
         [NonAction]
         public Boolean CheckIfUserExists(string userName)
         {
-            if (_context.Users.FirstOrDefault(user => user.UserName == userName) == null)
-            {
-                return false;
-            }
-
-            return true;
+            return _context.Users.FirstOrDefault(user => user.UserName == userName) != null;
         }
     }   
 }

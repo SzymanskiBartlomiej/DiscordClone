@@ -33,13 +33,8 @@ export class ChatComponent implements OnInit {
   }
 
   onSend(){
-    let message : Message = {
-      ChatID : this.chatID,
-      UserName : localStorage.getItem('userName') || "",
-      Content : this.newMessage,
-      Date : new Date()
-    }
-    this.connection.invoke("NewMessage",this.chatID,Number(localStorage.getItem('userID')),this.newMessage)
+    this.connection.invoke("NewMessage",this.chatID,this.newMessage)
+    this.newMessage = ""
   }
   OnMessageReceived(json : string){
     let message : Message = JSON.parse(json);

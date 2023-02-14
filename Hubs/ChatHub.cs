@@ -30,8 +30,9 @@ public class ChatHub : Hub
         }
         return base.OnConnectedAsync();
     }
-    public async Task NewMessage(int chatid, int userid, string message)
+    public async Task NewMessage(int chatid, string message)
     {
+        var userid = int.Parse(Context.User.FindFirstValue(ClaimTypes.SerialNumber));
         var userName = _context.Users.FirstOrDefault(user => user.UserId == userid).UserName;
         this._context.Messages.Add(new Message{
             UserId = userid,
