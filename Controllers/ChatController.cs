@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text.Json;
 using DiscordClone.Context;
+using DiscordClone.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +23,9 @@ namespace DiscordClone.Controllers
         [NonAction]
         public List<int> GetUserServers(int userId)
         {
-            var userServers = _context.Servers
+            var userServers = _context.UserServers
                 .Where(server => server.UserId == userId)
-                .Select(server => server.ChatId)
+                .Select(server => server.ServerId)
                 .ToList();
             return userServers;
         }
@@ -50,7 +51,7 @@ namespace DiscordClone.Controllers
                 join users in _context.Users
                 on messages.UserId equals users.UserId
                 orderby messages.Date
-                select new { messages.Content, messages.Date, users.UserName, messages.ChatId };
+                select new { messages.Content, messages.Date, users.UserName, messages.ServerId };
             return Ok(JsonSerializer.Serialize(result.ToList()));
         }
 

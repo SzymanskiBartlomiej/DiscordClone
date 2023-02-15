@@ -7,9 +7,11 @@ public partial class Server
 {
     public int ServerId { get; set; }
 
-    public int UserId { get; set; }
+    public string? Name { get; set; }
 
-    public int ChatId { get; set; }
+    public string? InviteCode { get; set; }
 
-    public virtual User User { get; set; } = null!;
+    public virtual ICollection<Message> Messages { get; } = new List<Message>();
+
+    public virtual ICollection<UserServer> UserServers { get; } = new List<UserServer>();
 }

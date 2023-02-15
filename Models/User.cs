@@ -13,5 +13,5 @@ public partial class User
 
     public virtual ICollection<Message> Messages { get; } = new List<Message>();
 
-    public virtual ICollection<Server> Servers { get; } = new List<Server>();
+    public virtual ICollection<UserServer> UserServers { get; } = new List<UserServer>();
 }

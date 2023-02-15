@@ -3,17 +3,15 @@ using System.Collections.Generic;
 
 namespace DiscordClone.Models;
 
-public partial class Message
+public partial class UserServer
 {
-    public int MessageId { get; set; }
-
-    public int UserId { get; set; }
+    public int Id { get; set; }
 
     public int ServerId { get; set; }
 
-    public string? Content { get; set; }
+    public int UserId { get; set; }
 
-    public DateTime? Date { get; set; }
+    public string? Role { get; set; }
 
     public virtual Server Server { get; set; } = null!;
 

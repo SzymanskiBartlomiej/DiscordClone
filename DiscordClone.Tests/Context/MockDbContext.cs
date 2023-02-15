@@ -20,19 +20,26 @@ public class MockDbContext
             UserName = "admin",
             PasswordHash = "$2a$11$3GPMCF/SzcFNmohn2n3I6ebWt9s6p00EAWSNfM0mbVR143F/FmOT6"
         });
-        context.Servers.Add(new Server
+        context.UserServers.Add(new UserServer()
         {
+            Id = 1,
             ServerId = 1,
             UserId = 1,
-            ChatId = 1
+            Role = "admin"
         });
         context.Messages.Add(new Message
         {
             MessageId = 1,
             UserId = 1,
-            ChatId = 1,
+            ServerId = 1,
             Content = "lorem ipsum",
             Date = new DateTime()
+        });
+        context.Servers.Add(new Server
+        {
+            ServerId = 1,
+            Name = "global chat",
+            InviteCode = ""
         });
         await context.SaveChangesAsync();
         return context;

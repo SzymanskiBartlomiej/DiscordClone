@@ -26,7 +26,7 @@ public class ChatControllerTests
     public async void ChatController_GetChat_ReturnsOK()
     {
         var userId = 1;
-        var chatId = 1;
+        var ServerId = 1;
         var context = await new MockDbContext().GetDatabaseContext();
         
         var mockUser = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
@@ -37,14 +37,15 @@ public class ChatControllerTests
         var controller = new ChatController(context);
         controller.ControllerContext = new ControllerContext();     
         controller.ControllerContext.HttpContext = new DefaultHttpContext { User = mockUser };
-        var userChats = await controller.GetChat(chatId);
+        var userChats = await controller.GetChat(ServerId);
         userChats.Should().NotBeNull();
         var res = (string)(userChats as OkObjectResult).Value;
         var json = JArray.Parse(res);
         Assert.Equal(1,json.Count );
+        _output.WriteLine(json.First().ToString());
         json.First["Content"].ToString().Should().Be("lorem ipsum");
         json.First["UserName"].ToString().Should().Be("admin");
-        json.First["ChatId"].ToString().Should().Be("1");
+        json.First["ServerId"].ToString().Should().Be("1");
 
     }
 
@@ -52,7 +53,7 @@ public class ChatControllerTests
     public async void ChatController_GetChat_ReturnsUnauthorized()
     {
         var userId = 99999;
-        var chatId = 1;
+        var serverId = 1;
         var context = await new MockDbContext().GetDatabaseContext();
         
         var mockUser = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
@@ -63,7 +64,7 @@ public class ChatControllerTests
         var controller = new ChatController(context);
         controller.ControllerContext = new ControllerContext();     
         controller.ControllerContext.HttpContext = new DefaultHttpContext { User = mockUser };
-        var result = await controller.GetChat(chatId);
+        var result = await controller.GetChat(serverId);
         var unAuthorizedResult = result as UnauthorizedObjectResult;
         unAuthorizedResult.StatusCode.Should().Be(401);
     }
@@ -79,6 +80,6 @@ public class ChatControllerTests
         userHistory[0].MessageId.Should().Be(1);
         userHistory[0].UserId.Should().Be(1);
         userHistory[0].Content.Should().Be("lorem ipsum");
-        userHistory[0].ChatId.Should().Be(1);
+        userHistory[0].ServerId.Should().Be(1);
     }
 }

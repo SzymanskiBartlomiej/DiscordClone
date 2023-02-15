@@ -1,6 +1,6 @@
 export interface Message {
         UserName: string;
-        ChatID: number;
+        ServerId: number;
         Content: string;
         Date: Date;
 }

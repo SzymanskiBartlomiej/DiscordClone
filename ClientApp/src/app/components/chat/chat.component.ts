@@ -11,7 +11,7 @@ import * as moment from 'moment';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  chatID = 1;
+  serverID = 1;
   messages : Message[] = [];
   private connection: signalR.HubConnection;
   constructor(private auth: AuthService , private router : Router , private http : HttpClient) {
@@ -26,19 +26,19 @@ export class ChatComponent implements OnInit {
     if(!this.auth.isAuthenticated()){
       this.router.navigate(['/login']);
     }
-    let url = "https://localhost:7034/api/Chat/" + this.chatID.toString()
+    let url = "https://localhost:7034/api/Chat/" + this.serverID.toString()
     this.http.get<Message[]>(url).subscribe(messages => {this.messages = messages});
     this.connection.start().then(() => { console.log("connected") }).catch(err => console.log(err));
     this.connection.on("messageReceived", (message : string) => this.OnMessageReceived(message));
   }
 
   onSend(){
-    this.connection.invoke("NewMessage",this.chatID,this.newMessage)
+    this.connection.invoke("NewMessage",this.serverID,this.newMessage)
     this.newMessage = ""
   }
   OnMessageReceived(json : string){
     let message : Message = JSON.parse(json);
-    if (message.ChatID == this.chatID)
+    if (message.ServerId == this.serverID)
     {
       this.messages.push(message);
     }
