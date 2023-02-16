@@ -1,70 +1,66 @@
 using System.Security.Claims;
-using DiscordClone.Context;
-using DiscordClone.Models;
 using DiscordClone.Controllers;
+using DiscordClone.Models;
 using DiscordClone.Tests.Context;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.InMemory;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 
 namespace DiscordClone.Tests.Controllers;
 
-public class ChatControllerTests
+public class MessagesControllerTests
 {
     private readonly ITestOutputHelper _output;
 
-    public ChatControllerTests(ITestOutputHelper output)
+    public MessagesControllerTests(ITestOutputHelper output)
     {
         _output = output;
     }
-    
+
     [Fact]
-    public async void ChatController_GetChat_ReturnsOK()
+    public async void ChatController_GetMessages_ReturnsOK()
     {
         var userId = 1;
         var ServerId = 1;
         var context = await new MockDbContext().GetDatabaseContext();
-        
+
         var mockUser = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
         {
             new Claim(ClaimTypes.SerialNumber, userId.ToString())
         }));
-        
-        var controller = new ChatController(context);
-        controller.ControllerContext = new ControllerContext();     
+
+        var controller = new MessagesController(context);
+        controller.ControllerContext = new ControllerContext();
         controller.ControllerContext.HttpContext = new DefaultHttpContext { User = mockUser };
-        var userChats = await controller.GetChat(ServerId);
-        userChats.Should().NotBeNull();
-        var res = (string)(userChats as OkObjectResult).Value;
+        var messages = await controller.GetMessages(ServerId);
+        messages.Should().NotBeNull();
+        var res = (string)(messages as OkObjectResult).Value;
         var json = JArray.Parse(res);
-        Assert.Equal(1,json.Count );
-        _output.WriteLine(json.First().ToString());
+        Assert.Equal(1, json.Count);
+
         json.First["Content"].ToString().Should().Be("lorem ipsum");
         json.First["UserName"].ToString().Should().Be("admin");
         json.First["ServerId"].ToString().Should().Be("1");
-
     }
 
     [Fact]
-    public async void ChatController_GetChat_ReturnsUnauthorized()
+    public async void ChatController_GetMessagesReturnsUnauthorized()
     {
         var userId = 99999;
         var serverId = 1;
         var context = await new MockDbContext().GetDatabaseContext();
-        
+
         var mockUser = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
         {
             new Claim(ClaimTypes.SerialNumber, userId.ToString())
         }));
-        
-        var controller = new ChatController(context);
-        controller.ControllerContext = new ControllerContext();     
+
+        var controller = new MessagesController(context);
+        controller.ControllerContext = new ControllerContext();
         controller.ControllerContext.HttpContext = new DefaultHttpContext { User = mockUser };
-        var result = await controller.GetChat(serverId);
+        var result = await controller.GetMessages(serverId);
         var unAuthorizedResult = result as UnauthorizedObjectResult;
         unAuthorizedResult.StatusCode.Should().Be(401);
     }
@@ -74,9 +70,9 @@ public class ChatControllerTests
     {
         var userId = 1;
         var context = await new MockDbContext().GetDatabaseContext();
-        var controller = new ChatController(context);
+        var controller = new MessagesController(context);
         var res = await controller.GetUserHistory(userId, 0);
-        List<Message> userHistory = (List<Message>)(res as OkObjectResult).Value;
+        var userHistory = (List<Message>)(res as OkObjectResult).Value;
         userHistory[0].MessageId.Should().Be(1);
         userHistory[0].UserId.Should().Be(1);
         userHistory[0].Content.Should().Be("lorem ipsum");

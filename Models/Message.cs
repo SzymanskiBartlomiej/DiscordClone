@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace DiscordClone.Models;
 
-namespace DiscordClone.Models;
-
-public partial class Message
+public class Message
 {
     public int MessageId { get; set; }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using DiscordClone.Models;
+﻿using DiscordClone.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiscordClone.Context;
@@ -27,10 +25,10 @@ public partial class MyDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseNpgsql("Host=ep-snowy-cloud-159887.eu-central-1.aws.neon.tech;Database=neondb;Username=barteksz601;Password=n4USGgtczW5i");
-        } 
+            optionsBuilder.UseNpgsql(
+                "Host=ep-snowy-cloud-159887.eu-central-1.aws.neon.tech;Database=neondb;Username=barteksz601;Password=n4USGgtczW5i");
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Message>(entity =>

@@ -9,7 +9,7 @@ public class MockDbContext
     public async Task<MyDbContext> GetDatabaseContext()
     {
         var options = new DbContextOptionsBuilder<MyDbContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase("TestDb")
             .Options;
         var context = new MyDbContext(options);
         context.Database.EnsureDeleted();
@@ -20,7 +20,7 @@ public class MockDbContext
             UserName = "admin",
             PasswordHash = "$2a$11$3GPMCF/SzcFNmohn2n3I6ebWt9s6p00EAWSNfM0mbVR143F/FmOT6"
         });
-        context.UserServers.Add(new UserServer()
+        context.UserServers.Add(new UserServer
         {
             Id = 1,
             ServerId = 1,
@@ -40,6 +40,12 @@ public class MockDbContext
             ServerId = 1,
             Name = "global chat",
             InviteCode = ""
+        });
+        context.Servers.Add(new Server
+        {
+            ServerId = 2,
+            Name = "test chat",
+            InviteCode = "xdd"
         });
         await context.SaveChangesAsync();
         return context;

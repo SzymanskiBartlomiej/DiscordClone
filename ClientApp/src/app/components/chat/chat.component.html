@@ -1,13 +1,14 @@
 <div class="content">
-        <div class="messages">
-                <div *ngFor="let message of messages">
-                        <p>Autor: {{message.UserName}} data: {{fixDate(message.Date)}} - {{message.Content}}</p>
-                </div>
-        </div>
-        <div class="input-group input-group-lg fixed-bottom message-input">
-                <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" name="newMessage" [(ngModel)] = newMessage>
-                <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary btn-lg" type="button" (click) = "onSend()">Send</button>
-                </div>
-        </div>
+  <div class="messages">
+    <div *ngFor="let message of messages">
+      <p>Autor: {{message.UserName}} data: {{fixDate(message.Date)}} - {{message.Content}}</p>
+    </div>
+  </div>
+  <div class="input-group input-group-lg fixed-bottom message-input">
+    <input [(ngModel)]=newMessage aria-describedby="inputGroup-sizing-sm" aria-label="Large" class="form-control" name="newMessage"
+           type="text">
+    <div class="input-group-prepend">
+      <button (click)="onSend()" class="btn btn-outline-secondary btn-lg" type="button">Send</button>
+    </div>
+  </div>
 </div>

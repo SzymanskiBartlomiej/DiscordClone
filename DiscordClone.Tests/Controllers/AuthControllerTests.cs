@@ -1,10 +1,7 @@
-using DiscordClone.Context;
 using DiscordClone.Controllers;
-using DiscordClone.Models;
 using DiscordClone.Tests.Context;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DiscordClone.Tests.Controllers;
 
@@ -18,8 +15,8 @@ public class AuthControllerTests
         controller.CheckIfUserExists("admin").Should().Be(true);
         controller.CheckIfUserExists("xD").Should().Be(false);
     }
-    
-    
+
+
     [Fact]
     public async void AuthController_RegisterReturnsOk()
     {
@@ -32,6 +29,7 @@ public class AuthControllerTests
         OkResult.StatusCode.Should().Be(200);
         context.Users.FirstOrDefault(user => user.UserName == userName).Should().NotBeNull();
     }
+
     [Fact]
     public async void AuthController_RegisterReturnsUserIsAlreadyRegistered()
     {
@@ -44,6 +42,7 @@ public class AuthControllerTests
         badRequest.StatusCode.Should().Be(400);
         badRequest.Value.Should().Be("User is already registered");
     }
+
     [Fact]
     public async void AuthController_LoginReturnsOk()
     {
@@ -55,7 +54,7 @@ public class AuthControllerTests
         var okResult = result as OkObjectResult;
         okResult.StatusCode.Should().Be(200);
     }
-    
+
     [Fact]
     public async void AuthController_LoginReturnsUserNotFound()
     {
@@ -68,7 +67,7 @@ public class AuthControllerTests
         badRequest.StatusCode.Should().Be(400);
         badRequest.Value.Should().Be("User not found");
     }
-    
+
     [Fact]
     public async void AuthController_LoginReturnsWrongPassword()
     {

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace DiscordClone.Models;
 
-namespace DiscordClone.Models;
-
-public partial class UserServer
+public class UserServer
 {
     public int Id { get; set; }
 

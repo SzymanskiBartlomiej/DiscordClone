@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -8,11 +9,31 @@ import { Component } from '@angular/core';
 export class NavMenuComponent {
   isExpanded = false;
 
+  constructor(private auth: AuthService) {
+  }
+
   collapse() {
     this.isExpanded = false;
   }
 
   toggle() {
     this.isExpanded = !this.isExpanded;
+  }
+
+  isAuthenticated() {
+    return this.auth.isAuthenticated();
+  }
+
+  getUsername() {
+    return this.auth.getUsername();
+  }
+
+  async logout() {
+    await Promise.all([
+      localStorage.setItem('token', ""),
+      localStorage.setItem('expiration', ""),
+      localStorage.setItem('userID', ""),
+      localStorage.setItem('userName', ""),
+    ]);
   }
 }

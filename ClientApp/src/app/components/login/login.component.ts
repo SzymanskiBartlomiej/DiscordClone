@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from 'src/app/services/auth.service';
+import {Router} from '@angular/router';
+import {ServersService} from 'src/app/services/servers.service';
 
 @Component({
   selector: 'app-login',
@@ -11,18 +12,31 @@ export class LoginComponent implements OnInit {
   login !: string;
   password !: string;
   token !: Object;
-  constructor(private auth : AuthService , private router : Router) { }
+
+  constructor(private auth: AuthService, private router: Router, private serverService: ServersService) {
+  }
 
   ngOnInit(): void {
   }
+
   async onSubmit() {
-    await this.auth.login(this.login, this.password).subscribe(token => {
-      localStorage.setItem('token', token.token)
-      localStorage.setItem('expiration', token.expiration)
-      localStorage.setItem('userID', token.userID)
-      localStorage.setItem('userName', token.userName)
-    });
-    this.auth.UserInfo().subscribe(user => console.log(user))
-    this.router.navigate(['/']);
+    try {
+      const token = await this.auth.login(this.login, this.password).toPromise();
+      await this.setToken(token);
+      this.serverService.updateServers();
+      await this.router.navigate(['/']);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async setToken(token: any) {
+    const {token: tokenValue, expiration, userID, userName} = token;
+    await Promise.all([
+      localStorage.setItem('token', tokenValue),
+      localStorage.setItem('expiration', expiration),
+      localStorage.setItem('userID', userID),
+      localStorage.setItem('userName', userName),
+    ]);
   }
 }

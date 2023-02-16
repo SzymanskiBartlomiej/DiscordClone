@@ -1,0 +1,55 @@
+<div class="d-flex flex-column flex-shrink-0 sidebar" style="width: 4.5rem;">
+  <ul *ngFor="let server of servers" class="nav nav-pills nav-flush flex-column mb-auto text-center">
+    <li class="nav-item">
+      <a aria-current="page" class="nav-link active py-3 border-bottom" data-bs-placement="right" data-bs-toggle="tooltip"
+         href="chat/{{server.ServerId}}" title="Home"> {{server.Name}} </a>
+    </li>
+  </ul>
+  <button (click)=open(join) class="btn btn-primary nav-item" type="button">Join</button>
+  <button (click)=open(create) class="btn btn-primary nav-item" type="button">Create</button>
+  <ng-template #join let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Join Server</h4>
+      <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="btn-close" type="button"></button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onJoin()">
+
+        <div class="form-outline mb-4">
+          <input [(ngModel)]=name class="form-control" name="name" placeholder="Server Name" type="text"/>
+        </div>
+
+        <div class="form-outline mb-4">
+          <input [(ngModel)]=inviteCode class="form-control" name="inviteCode" placeholder="Invite Code" type="text"/>
+        </div>
+
+        <input class="btn btn-primary btn-block mb-4" type="submit" value="Join Server"/>
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" class="btn btn-outline-dark" type="button">Zamknij</button>
+    </div>
+  </ng-template>
+
+  <ng-template #create let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Create Server</h4>
+      <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="btn-close" type="button"></button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onCreate()">
+
+        <div class="form-outline mb-4">
+          <input [(ngModel)]=name class="form-control" name="name" placeholder="Server Name" type="text"/>
+        </div>
+
+        <input class="btn btn-primary btn-block mb-4" type="submit" value="Create Server"/>
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close()" class="btn btn-outline-dark" type="button">Zamknij</button>
+    </div>
+  </ng-template>
+</div>
