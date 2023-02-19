@@ -1,9 +1,11 @@
 <div class="d-flex flex-column flex-shrink-0 sidebar" style="width: 4.5rem;">
   <ul *ngFor="let server of servers" class="nav nav-pills nav-flush flex-column mb-auto text-center">
-    <li class="nav-item">
-      <a aria-current="page" class="nav-link active py-3 border-bottom" data-bs-placement="right" data-bs-toggle="tooltip"
+    <!-- <li class="nav-item">
+      <a   class="nav-link active py-3 border-bottom" data-bs-placement="right" data-bs-toggle="tooltip"
          href="chat/{{server.ServerId}}" title="Home"> {{server.Name}} </a>
-    </li>
+    </li> -->
+    <a class="nav-link active py-3 border-bottom nav-item" data-bs-placement="right" data-bs-toggle="tooltip"
+    href="chat/{{server.ServerId}}" title="Home"> <li>{{server.Name}}</li> </a>
   </ul>
   <button (click)=open(join) class="btn btn-primary nav-item" type="button">Join</button>
   <button (click)=open(create) class="btn btn-primary nav-item" type="button">Create</button>

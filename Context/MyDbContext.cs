@@ -25,8 +25,10 @@ public partial class MyDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
-            optionsBuilder.UseNpgsql(
-                "Host=ep-snowy-cloud-159887.eu-central-1.aws.neon.tech;Database=neondb;Username=barteksz601;Password=n4USGgtczW5i");
+        {
+            string connectionString = System.IO.File.ReadAllText("connectionString.txt");
+            optionsBuilder.UseNpgsql(connectionString);
+        } 
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

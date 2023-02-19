@@ -1,6 +1,8 @@
 .sidebar {
+  position: absolute;
   gap: 10px;
   margin: 10px;
+  margin-left: 30px;
 }
 
 .nav-item {

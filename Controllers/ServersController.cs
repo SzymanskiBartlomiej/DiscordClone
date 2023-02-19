@@ -2,20 +2,22 @@ using System.Security.Claims;
 using System.Text.Json;
 using DiscordClone.Context;
 using DiscordClone.Models;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiscordClone.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+[Microsoft.AspNetCore.Authorization.Authorize]
 public class ServersController : ControllerBase
 {
     private readonly MyDbContext _context;
-
-    public ServersController(MyDbContext context)
+    private readonly IHubContext<ChatHub> _hubContext;
+    public ServersController(MyDbContext context , IHubContext<ChatHub> hubContext)
     {
+        _hubContext = hubContext;
         _context = context;
     }
 
@@ -24,6 +26,16 @@ public class ServersController : ControllerBase
     {
         var userServers = _context.UserServers
             .Where(server => server.UserId == userId)
+            .Select(server => server.ServerId)
+            .ToList();
+        return userServers;
+    }
+    
+    [NonAction]
+    public List<int> GetUserServersWithAdminRole(int userId)
+    {
+        var userServers = _context.UserServers
+            .Where(server => (server.UserId == userId && server.Role == "admin"))
             .Select(server => server.ServerId)
             .ToList();
         return userServers;
@@ -67,7 +79,18 @@ public class ServersController : ControllerBase
             Role = "user"
         });
         await _context.SaveChangesAsync();
-        new ChatHub(_context).addToGroup(userId.ToString(), server.ServerId.ToString());
+        await _hubContext.Clients.All.SendAsync("addToGroup", userId.ToString(), server.ServerId.ToString());
         return Ok();
+    }
+
+    [HttpGet("users")]
+    public async Task<IActionResult> GetServerMembers(int serverId)
+    {
+        if (_context.Servers.FirstOrDefault(server => server.ServerId == serverId) == null)
+            return BadRequest("This server do not exists");
+        var users = await _context.UserServers.Where(userServer => userServer.ServerId == serverId)
+            .Select(userServer => userServer.User.UserName)
+            .ToListAsync();
+        return Ok(users);
     }
 }

@@ -5,6 +5,8 @@ using DiscordClone.Tests.Context;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 
@@ -25,13 +27,14 @@ public class MessagesControllerTests
         var userId = 1;
         var ServerId = 1;
         var context = await new MockDbContext().GetDatabaseContext();
+        var mockHubContext = new Mock<IHubContext<ChatHub>>();
 
         var mockUser = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
         {
             new Claim(ClaimTypes.SerialNumber, userId.ToString())
         }));
 
-        var controller = new MessagesController(context);
+        var controller = new MessagesController(context,mockHubContext.Object);
         controller.ControllerContext = new ControllerContext();
         controller.ControllerContext.HttpContext = new DefaultHttpContext { User = mockUser };
         var messages = await controller.GetMessages(ServerId);
@@ -51,13 +54,14 @@ public class MessagesControllerTests
         var userId = 99999;
         var serverId = 1;
         var context = await new MockDbContext().GetDatabaseContext();
+        var mockHubContext = new Mock<IHubContext<ChatHub>>();
 
         var mockUser = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
         {
             new Claim(ClaimTypes.SerialNumber, userId.ToString())
         }));
 
-        var controller = new MessagesController(context);
+        var controller = new MessagesController(context,mockHubContext.Object);
         controller.ControllerContext = new ControllerContext();
         controller.ControllerContext.HttpContext = new DefaultHttpContext { User = mockUser };
         var result = await controller.GetMessages(serverId);
@@ -70,7 +74,8 @@ public class MessagesControllerTests
     {
         var userId = 1;
         var context = await new MockDbContext().GetDatabaseContext();
-        var controller = new MessagesController(context);
+        var mockHubContext = new Mock<IHubContext<ChatHub>>();
+        var controller = new MessagesController(context,mockHubContext.Object);
         var res = await controller.GetUserHistory(userId, 0);
         var userHistory = (List<Message>)(res as OkObjectResult).Value;
         userHistory[0].MessageId.Should().Be(1);

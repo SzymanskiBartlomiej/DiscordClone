@@ -20,10 +20,38 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
+    if(!this.validatePassword()){return}
+    if(!this.valiateLogin()){return}
     this.auth.register(this.login, this.password).subscribe(response => {
       if (response.status == 200) {
         this.status = true;
       }
     })
+  }
+  validatePassword() {
+    if(this.password.length < 8) {
+      alert('Password must be at least 8 characters long');
+      return false;
+    }
+    if(!/[a-z]/.test(this.password)) {
+      alert('Password must contain at least one letter.');
+      return false;
+    }
+    if(!/[0-9]/.test(this.password)){
+      alert('Password must contain at least one digit.');
+      return false;
+    }
+    if(!/[A-Z]/.test(this.password)) {
+      alert('Password must contain at least one uppercase letter.');
+      return false;
+    }
+    return true;
+  }
+  valiateLogin() {
+    if(this.password.length < 1){
+      alert('Login must be at least 1 character long');
+      return false;
+    }
+    return true;
   }
 }

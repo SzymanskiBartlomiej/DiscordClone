@@ -4,7 +4,6 @@ import {AuthService} from '../../services/auth.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {lastValueFrom} from "rxjs";
 import {Server} from "../../interfaces/Server";
-import {ServersService} from 'src/app/services/servers.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,26 +15,24 @@ export class SidebarComponent implements OnInit {
   inviteCode: string = "";
   servers: Server[] = [];
 
-  constructor(private http: HttpClient, private auth: AuthService, private modalService: NgbModal, private serverService: ServersService) {
+  constructor(private http: HttpClient, private auth: AuthService, private modalService: NgbModal) {
   }
 
   ngOnInit() {
-    if (this.auth.isAuthenticated()) {
-      this.serverService.updateServers();
-      this.serverService.currentServers.subscribe(servers => {
-        this.servers = servers;
-      });
-    }
+    this.auth.authState.subscribe(async (authState) => {
+      if (this.auth.isAuthenticated()){
+        this.getServers();
+      }
+    })
   }
 
   async onCreate() {
     let params = new HttpParams();
     params = params.append('name', this.name);
-
     let url = "https://localhost:7034/api/Servers/create";
     await lastValueFrom(this.http.post<any>(url, null, {params: params}));
     this.name = "";
-    this.serverService.updateServers();
+    this.getServers();
   }
 
   async onJoin() {
@@ -46,10 +43,16 @@ export class SidebarComponent implements OnInit {
     await lastValueFrom(this.http.post<any>(url, null, {params: params}));
     this.inviteCode = "";
     this.name = "";
-    this.serverService.updateServers();
+    this.getServers();
   }
 
   open(content: any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'})
+  }
+  async getServers(){
+    let url = "https://localhost:7034/api/Servers ";
+    await this.http.get<Server[]>(url).subscribe(servers => {
+      this.servers = servers;
+    })
   }
 }
